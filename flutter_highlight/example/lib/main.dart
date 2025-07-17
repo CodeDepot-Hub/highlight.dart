@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/theme_map.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import 'example_map.dart';
 
 void main() => runApp(MyApp());
@@ -25,8 +26,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String language = 'dart';
+  String language = 'auto';
   String theme = 'a11y-dark';
+  bool showLineNumbers = false;
+  bool showControlBar = false;
+  bool textSelectable = false;
 
   Widget _buildMenuContent(String text) {
     return Container(
@@ -35,6 +39,22 @@ class _MyHomePageState extends State<MyHomePage> {
         Text(text, style: TextStyle(fontSize: 16)),
         Icon(Icons.arrow_drop_down)
       ]),
+    );
+  }
+
+  Widget _buildToggleButton(String label, bool value, VoidCallback onToggle) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(label, style: TextStyle(fontSize: 14)),
+          Switch(
+            value: value,
+            onChanged: (_) => onToggle(),
+          ),
+        ],
+      ),
     );
   }
 
@@ -58,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onSelected: (selected) {
               if (selected != null) {
                 setState(() {
-                  language = selected;
+                  language = selected as String;
                 });
               }
             },
@@ -75,12 +95,25 @@ class _MyHomePageState extends State<MyHomePage> {
               }).toList();
             },
             onSelected: (selected) {
-              if (selected != null) {
-                setState(() {
-                  theme = selected;
-                });
-              }
+              setState(() {
+                theme = selected!;
+              });
             },
+          ),
+          _buildToggleButton(
+            'Line Numbers',
+            showLineNumbers,
+            () => setState(() => showLineNumbers = !showLineNumbers),
+          ),
+          _buildToggleButton(
+            'Control Bar',
+            showControlBar,
+            () => setState(() => showControlBar = !showControlBar),
+          ),
+          _buildToggleButton(
+            'Text Selectable',
+            textSelectable,
+            () => setState(() => textSelectable = !textSelectable),
           ),
           IconButton(
             icon: const Icon(Icons.code),
@@ -91,20 +124,22 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            HighlightView(
-              exampleMap[language],
-              language: language,
-              theme: themeMap[theme],
-              padding: EdgeInsets.all(12),
-              textStyle: TextStyle(
-                  fontFamily:
-                      'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
-            )
-          ],
+      body: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Container(
+          child: HighlightView(
+            exampleMap[language] ?? '',
+            language: language == 'auto' ? null : language,
+            theme: themeMap[theme] ?? {},
+            lineNumbers: showLineNumbers,
+            controlBar: showControlBar,
+            textSelectable: textSelectable,
+            padding: EdgeInsets.all(12),
+            textStyle: TextStyle(
+              fontFamily:
+                  'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace',
+            ),
+          ),
         ),
       ),
     );
