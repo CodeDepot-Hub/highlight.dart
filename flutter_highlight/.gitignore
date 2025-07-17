@@ -72,3 +72,19 @@ build/
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 pubspec.lock
+
+# Generated files
+**/android/**/build
+**/android/**/build.gradle
+**/android/**/build.gradle.kts
+**/android/**/gradle.properties
+**/android/**/gradlew
+**/android/**/gradlew.bat
+**/android/**/local.properties
+**/android/**/settings.gradle
+**/android/**/settings.gradle.kts
+**/android/**/build.gradle
+**/android/**/build.gradle.kts
+**/android/**/gradle.properties
+
+.idea
