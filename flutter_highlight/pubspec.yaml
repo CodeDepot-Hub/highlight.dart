@@ -10,7 +10,10 @@ dependencies:
   flutter:
     sdk: flutter
   highlight:
-    path: ../highlight
+    git:
+      url: git@github.com:CodeDepot-Hub/highlight.dart.git
+      ref: 1.0/1.0.0
+      path: highlight
 
 dev_dependencies:
   flutter_test:
